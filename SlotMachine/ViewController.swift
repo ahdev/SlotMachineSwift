@@ -31,6 +31,8 @@ class ViewController: UIViewController {
     var betMaxButton: UIButton!
     var spinButton: UIButton!
     
+    var slots: [[Slot]] = []
+    
     let kMarginForView: CGFloat = 10.0
     let kMarginForSlot: CGFloat = 2.0
     
@@ -39,7 +41,7 @@ class ViewController: UIViewController {
     let kThird: CGFloat = 1.0 / 3.0
     let kHalf: CGFloat = 1.0 / 2.0
     
-    let kNumberOfColumns = 3
+    let kNumberOfContainers = 3
     let kNumberOfSlots = 3
     
     override func viewDidLoad() {
@@ -72,7 +74,8 @@ class ViewController: UIViewController {
     }
     
     func spinButtonPressed(button: UIButton) {
-        println(button)
+        self.slots = Factory.createSlots()
+        setupSecondContainer()
     }
 
     func setupContainers()
@@ -128,15 +131,26 @@ class ViewController: UIViewController {
 
     func setupSecondContainer()
     {
-        for var columnNumber = 0; columnNumber < kNumberOfSlots; columnNumber++
+        for var containerNumber = 0; containerNumber < kNumberOfContainers; containerNumber++
         {
-            for var rowNumber = 0; rowNumber < kNumberOfColumns; rowNumber++
+            for var slotNumber = 0; slotNumber < kNumberOfSlots; slotNumber++
             {
+                var slot: Slot
                 var slotImageView = UIImageView()
+                
+                if self.slots.count > 0 {
+                    let slotSet = self.slots[containerNumber]
+                    slot = slotSet[slotNumber]
+                    slotImageView.image = slot.image
+                }
+                else {
+                    slotImageView.image = UIImage(named: "Ace")
+                }
+                
                 slotImageView.backgroundColor = UIColor.yellowColor()
                 slotImageView.frame = CGRect(
-                    x: self.secondContainer.bounds.origin.x + (self.secondContainer.bounds.size.width * CGFloat(columnNumber) * kThird),
-                    y: self.secondContainer.bounds.origin.y + self.secondContainer.bounds.size.height * CGFloat(rowNumber) * kThird,
+                    x: self.secondContainer.bounds.origin.x + (self.secondContainer.bounds.size.width * CGFloat(containerNumber) * kThird),
+                    y: self.secondContainer.bounds.origin.y + self.secondContainer.bounds.size.height * CGFloat(slotNumber) * kThird,
                     width: self.secondContainer.bounds.width * kThird - kMarginForSlot,
                     height: self.secondContainer.bounds.height * kThird - kMarginForSlot)
                 self.secondContainer.addSubview(slotImageView)
